@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <color name="image_pick_title_btn_pressed">#f4f4f4</color>
+     <color name="image_pick_title_btn_normal">#00000000</color>
+    
+    
+</resources>
