@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		
+		<style>
+			html, body {
+				background-color: #efeff4;
+			}
+		</style>
+		<script>
+			mui.init();
+		</script>
+	</head>
+	<body>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div class="mui-segmented-control">
+					<a class="mui-control-item mui-active" id="ALL">
+						全部
+					</a>
+					<a class="mui-control-item" id="TANK">
+						肉
+					</a>
+					<a class="mui-control-item" id="AD">
+						AD
+					</a>
+					<a class="mui-control-item" id="AP">
+						AP
+					</a>
+					<a class="mui-control-item" id="SUPP">
+						辅助
+					</a>
+				</div>
+			</div>
+		</div>
+		<script type="application/javascript" charset="utf-8">
+		var detailPage = null;
+		mui.init({
+    		subpages:[{
+      		url:'hero_list.html',
+      		id:'hero_list.html',
+      		styles:{
+        		top:'50px',
+        		bottom:'0px'
+      		}
+    		}]
+  		});
+  		mui.plusReady(function(){
+  				$("#AP").click(function(){
+					showlist('[locate=ap]');
+				});
+				$("#AD").click(function(){
+					showlist('[locate=ad]');
+				});
+				$("#TANK").click(function(){
+					showlist('[locate=tank]');
+				});
+				$("#SUPP").click(function(){
+					showlist('[locate=supp]');
+				});
+				$("#ALL").click(function(){
+					showlist('');
+				});
+  		});
+  		
+  		function showlist(select){
+  			//获得详情页面
+			if(!detailPage){
+				detailPage = plus.webview.getWebviewById('hero_list.html');
+			}
+			mui.fire(detailPage,'select',{
+				locate:select
+			});
+		}
+		</script>
+	</body>
+</html>
