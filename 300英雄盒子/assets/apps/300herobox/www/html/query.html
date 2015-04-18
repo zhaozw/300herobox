@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../js/mui.min.js"></script>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/main.js"></script>
+    <link href="../css/mui.min.css" rel="stylesheet"/>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+    <style>
+	html,body {
+		background-color: #efeff4;
+	}
+	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 id="title" class="mui-title">战绩查询</h1>
+	</header>
+	<div class="mui-content">
+		<div class="mui-content-padded" style="margin: 25px;">
+			<h3>角色名称</h3>
+			<div class="mui-input-row" style="margin-top: 25px;">
+				<input type="text" class="mui-input-clear" style="padding: 28px 10px;" placeholder="请输入角色名称"><!--value="挂机裆"-->
+				<button class="mui-btn mui-btn-primary mui-btn-block" style="padding: 15px 0;">查询战绩</button>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" charset="utf-8">
+	mui.plusReady(function(){
+		$('.mui-btn-block').click(function(){
+			if($('.mui-input-clear').val()){
+				var networkinfo = plus.networkinfo.getCurrentType();
+				if(networkinfo == plus.networkinfo.CONNECTION_NONE){
+					mui.alert('当前未连接网络！无法查询！','网络错误');
+					return;
+				}else if(networkinfo == plus.networkinfo.CONNECTION_CELL2G || networkinfo == plus.networkinfo.CONNECTION_CELL3G || networkinfo == plus.networkinfo.CONNECTION_CELL4G){
+					var btnArray = ['确认','取消'];
+			  		mui.confirm('您当前使用的为 2G/3G/4G 网络，查询将产生流量费用，是否继续？','网络提醒',btnArray,function(e){
+			  			if(e.index == 0){
+			  				open_query_list();
+			  			}
+			  		})
+				}else{
+					open_query_list();
+				}
+			}else{
+				mui.alert('请输入角色名称！','提示');
+			}
+			
+		});
+		function open_query_list(){
+			plus.storage.setItem('role',$('.mui-input-clear').val());
+			mui.openWindow({
+				id: 'query_page.html',
+				url: 'query_page.html',
+				waiting:{
+      				autoShow:true,//自动显示等待框，默认为true
+      				title:'正在加载...',//等待对话框上显示的提示内容
+    			}
+			});
+		}
+				
+	});
+	</script>
+</body>
+</html>

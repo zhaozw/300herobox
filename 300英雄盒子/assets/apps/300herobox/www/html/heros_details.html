@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<!-- include core -->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.js"></script>
+		<script src="../js/jsonsql.js"></script>
+		<script src="../js/main.js"></script>
+		<!-- include data -->
+		<script src="../data/heros.js"></script>
+		<script src="../data/skill.js"></script>
+
+		<link href="../css/mui.min.css" rel="stylesheet" />
+
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			#div1 div {
+				padding: 10px 10px 10px 10px;
+				height: auto;
+				float: left;
+				display: inline;
+			}
+			#himg {
+				width: 60%;
+			}
+			#jindu{
+				width:40%;
+			}
+			p {
+				margin-bottom: 0px;
+			}
+			/* 列表 */
+			#xxlb th {
+				vertical-align: baseline;
+				padding: 5px 6px 5px 6px;
+				background-color: #efefef;
+				border: 1px solid #ddd;
+				text-align: left;
+			}
+			#xxlb td {
+				vertical-align: text-top;
+				padding: 6px 3px 6px 3px;
+				background-color: #fff;
+				border: 1px solid #ddd;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 id="title" class="mui-title"></h1>
+		</header>
+		<div id="shuxing" style="padding-top:60px;">
+			<div class="mui-card" id="div1">
+				<div id="himg"></div>
+				<div id="jindu"></div>
+			</div>
+		</div>
+		<div class="mui-content" style="padding-top:0px;">
+			<div class="mui-card">
+				<table style="width: 100%;">
+					<tbody id="xxlb">
+						<tr>
+							<th colspan="4">详细属性：</th>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--div class="mui-card" style="margin-top: 15px;">
+		<div class="mui-input-row mui-input-range">
+			<label id="level">等级:(1)</label>
+            <input type="range" id='inline-range' value="1" min="1" max="18" >
+        </div>
+	</div-->
+		<div class="mui-card" style="margin-top: 15px;margin-bottom: 25px;">
+			<ul class="mui-table-view" id="skill"></ul>
+		</div>
+		<div style="margin: 15px;margin-bottom: 25px;" id="article_button">
+			<button class="mui-btn mui-btn-block">
+				<span class="mui-icon mui-icon-list"></span> 加载英雄攻略
+			</button>
+		</div>
+		<div class="mui-card" style="margin-bottom: 35px;display: none;" id="article_div">
+			<ul class="mui-table-view" id="article_list"></ul>
+		</div>
+		<script type="application/javascript" charset="UTF-8">
+			$(function(){
+				var get = urlGet();
+				var hid = get['hid'];
+				// 加载英雄信息
+				var hdata = jsonsql.query('select * from heros where (hid==' + hid + ')',heros)[0];
+				$('.mui-title').html('“' + hdata.hname + '” 的资料');
+				$('#himg').html('<img src="../img/himg/' + hid + '.jpg" onerror="this.src=\'../img/noskillpic.jpg\'" style="width:100%;"></img>');
+				var sxid = ['pbarhp','pbarad','pbarap','pbarteam','pbaroper','goprice','doprice'];
+				var sx = ['生命','攻击','法术','团队','操作','金币','钻石'];
+				$('#jindu').append('<a>英雄属性：</a></br></br>');
+				for(var i=0;i<5;i++){
+					$('#jindu').append('<p>' + sx[i] + '：&emsp;<span class="mui-badge mui-badge-primary">' + hdata[sxid[i]] + '</span></p>');
+				}
+				$('#jindu').append('</br><a>购买方式：</a></br></br>');
+				for(var i=5;i<7;i++){
+					$('#jindu').append('<p>' + sx[i] + '：&emsp;<span class="mui-badge mui-badge-primary">' + hdata[sxid[i]] + '</span></p>');
+				}
+				var sxid = ['hp','mp','ad','ap','pd','sr','crit','atsp','atran','speed'];
+				var sx = ['生命值','魔法值','物理攻击','法术强度','物理防御','魔法抗性','暴击','攻击速度','攻击范围','移动速度'];
+				for(var i=0;i<10;i=i+2){
+					$('#xxlb').append(
+					'<tr>' +
+					'	<td><a>' + sx[i] + '</a></td>' +
+					'	<td><span class="mui-badge mui-badge-primary">' + hdata[sxid[i]] + '</span></td>' +
+					'	<td><a>' + sx[i+1] + '</a></td>' +
+					'	<td><span class="mui-badge mui-badge-primary">' + hdata[sxid[i+1]] + '</span></td>' +
+					'</tr>');
+				}
+				// 加载技能信息
+				var sxid = ['skillpid','skillqid','skillwid','skilleid','skillrid'];
+				for(var i=0;i<5;i++){
+					sdata = jsonsql.query('select * from skill where (skid==' + hdata[sxid[i]] + ')',skill)[0];
+					$('#skill').append(
+					'<li class="mui-table-view-cell mui-collapse">' +
+					'	<a class="mui-navigate-right" href="#">' +
+					'		<img class="mui-media-object mui-pull-left" onerror="this.src=\'../img/nopic.jpg\'" src="../img/skill/' + hdata[sxid[i]] + '.jpg">' +
+					'		<div class="mui-media-body">' +
+					'			' + sdata.skillname +
+					'			<p class="mui-ellipsis">快捷键:' + sdata.skillkey + '</p>' +
+					'		</div>' +
+					'	</a>' +
+					'	<div class="mui-collapse-content">' +
+					'		<a>' +
+					'			技能消耗：' + sdata.skillcons +
+					'		</a><br/>' +
+					'		<a>' +
+					'			冷却时间：' + sdata.skillcool +
+					'		</a>' +
+					'		<p>' +
+					'			' + sdata.skillinfo +
+					'		</p>' +
+					'	</div>' +
+					'</li>');
+				}
+
+				$('#article_button').click(function(){
+					var nWaiting = plus.nativeUI.showWaiting('正在加载...');
+					mui.ajax('http://wz.tohkalove.com/api/article.php',{
+						data:{
+							'hid':hid
+						},
+						dataType:'json',
+						type:'GET',
+						timeout:20000,
+						success:function(json){
+							if(json.length){
+								for(var i=0;i<json.length;i++){
+									$('#article_list').append(
+									'<li class="mui-table-view-cell mui-media">' +
+									'	<a onclick="open_article(' + json[i].haid + ');">' +
+									'		<img class="mui-media-object mui-pull-left" src="http://bbs.300hero.net/uc/avatar.php?uid=' + json[i].uid + '&size=middle">' +
+									'			<div class="mui-media-body">' +
+									'				' + json[i].title +
+									'				<p class="mui-ellipsis">' + json[i].uname + ' - ' + json[i].datetime + '</p>' +
+									'			</div>' +
+									'	</a>' +
+									'</li>');
+								}
+								$('#article_div').show();
+								$('#article_button').hide();
+							}else{
+								mui.alert('此英雄还没有人提交攻略哦！\n赶快去 http://data.300hero.net/\n提交攻略吧！','暂无攻略');
+							}
+							
+							nWaiting.close();
+						},
+						error:function(xhr,type,errorThrown){
+							mui.alert('网络连接超时！请稍后再试！\n错误响应：' + xhr.status,'网络错误');
+							nWaiting.close();
+						}
+					});
+				});
+	    		//$('#inline-range').on('input',function(){
+	    		//	$('#level').text('等级:(' + $(this).val() + ')');
+				//})
+			});
+			
+			function open_article(haid){
+				//alert(haid);
+				mui.openWindow({
+					id: 'article_page.html',
+					url: 'article_page.html?haid=' + haid,
+					waiting:{
+	      				autoShow:true,
+	      				title:'正在加载...',
+	    			}
+				});
+			}
+		</script>
+	</body>
+
+</html>
